@@ -4,10 +4,8 @@ require("dotenv").config();
 var keys = require("./keys.js");
 
 //required for twitter/spotify recall
-var twitter = require("twitter");
-var spotify = require("spotify");
-
-
+var Twitter = require("Twitter");
+var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
@@ -21,6 +19,8 @@ doSomething(node_action);
 //var command = "";
 
 
+
+//twitter function
 //don't spend too much time reading the tweets, this is actually from my personal twitter account because i was too lazy to create a new one. 
 function getTweets(){
 
@@ -43,6 +43,41 @@ function doSomething(node_action) {
         getTweets();
     }
 }; 
+
+//spotify function
+function getSpotify(trackName, trackInfo){
+
+    var trackName = process.argv[3];
+
+        if (!trackName) {
+            trackName = "Knee Socks"
+        }
+
+    spotify.search({ type: 'track', query: trackName }, function(err, data) {
+        if ( err ) {
+            console.log('Error occurred: ' + err);
+            return;
+        }
+        else {
+            var trackInfo = data.tracks.items;
+            for (var i = 0; i < 5; i++) {
+                var results = 
+                    "Artist: " + trackInfo[i].artists[0].name + "/n" +
+                    "Album: " + trackInfo[i].album.name + "/n"
+                    
+                console.log(results); 
+            };
+    };
+        
+    });
+}
+
+function doSomething(node_action) {
+    if (node_action = "spotify-this-song") {
+        getSpotify();
+    }
+};
+
 
 
 
