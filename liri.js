@@ -9,6 +9,10 @@ var Spotify = require("node-spotify-api");
 var spotify = new Spotify(keys.spotify);
 var client = new Twitter(keys.twitter);
 
+var request = require("request");
+
+
+
 //just so i don't have to type in process.argv over and over
 var node_action = process.argv[2];
 
@@ -60,15 +64,19 @@ function getSpotify(trackName, trackInfo){
         }
         else {
             var trackInfo = data.tracks.items;
-            for (var i = 0; i < 5; i++) {
+            for (var i = 0; i < 1; i++) {
                 var results = 
-                    "Artist: " + trackInfo[i].artists[0].name + "/n" +
-                    "Album: " + trackInfo[i].album.name + "/n"
-                    
+                    "=======================================" + "\n" +
+                    "Artist: " + trackInfo[i].artists[0].name + "\n" +
+                    "Album: " + trackInfo[i].album.name + "\n"
+                    +
+                    "Song: " + trackInfo[i].name + "\n"
+                    +
+                    "Preview URL: " + trackInfo[i].preview_url + "\n"
+                    + "====================================="
                 console.log(results); 
             };
-    };
-        
+        }
     });
 }
 
@@ -77,6 +85,11 @@ function doSomething(node_action) {
         getSpotify();
     }
 };
+
+
+
+
+
 
 
 
