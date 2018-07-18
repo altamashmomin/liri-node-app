@@ -15,32 +15,51 @@ var request = require("request");
 var node_action = process.argv[2];
 
 //type in something and you'll get a response
-doSomething(node_action);
+//doTwitter();
+//doSpotify(); //new
 
 //im aware that this can be consolidated with a "switch"; i did this originally in order to test out each feature one by one
 
 //twitter worked up into spotify was added, and i think it has to do with the variable set for process.argv that seems to override my-tweets and assume it's for spotify
 
 //does nothing and it's probably because i'm not using some sort of split method to add the movie input as "this+is+a+movie"
-function doSomething(node_action) {
+/*function doSomething() {
     if(node_action = "movie-this") {
         getOMDB();
     }
 };
 
 //twitter function to call
-function doSomething(node_action) {
-    if(action = "my-tweets") {
-        getTweets(node_action);
+function doTwitter(node_action) { //new
+    if(node_action = "my-tweets") {
+        getTweets();
     }
 }; 
 
 //spotify function to call
-function doSomething(node_action) {
+function doSpotify() { //new
     if (node_action = "spotify-this-song") {
         getSpotify();
     }
+};*/
+
+function doSomething() {
+    switch (node_action) {
+        case "my-tweets":
+        getTweets();
+        break;
+
+        case "spotify-this-song":
+        getSpotify();
+        break;
+
+        case "movie-this": 
+        getOMDB();
+        break;
+    }
 };
+
+doSomething();
 
 
 //NOTE: i didn't know how to do the do-what-it-says part but if you just type in spotify-this-song and don't input a third command, it automatically goes to "Knee socks" that i set up in random.txt
@@ -51,14 +70,20 @@ function doSomething(node_action) {
 
 //twitter function
 //don't spend too much time reading the tweets, this is actually from my personal twitter account because i was too lazy to create a new one. 
-function getTweets(node_action){
+function getTweets(){
+
+    //node_action = process.argv[2];
 
     var params = {screen_name: "w0lf_fl0w", count: 20};
     client.get('statuses/user_timeline', params, function(error, tweets, response) {
         if (!error) {
             for (var i = 0; i < tweets.length; i++) {
                 var tweetsText = tweets[i].text;
-                console.log("Tweets: " + tweetsText);                
+                var results = "*-*-*-*-*-*-*-*-*-*-*" + "\n" +
+                "Tweets: " + tweetsText + "\n" +
+                "*-*-*-*-*-*-*-*-*-*-*"
+                
+                console.log(results);                
             }
         }
         else {
@@ -68,7 +93,7 @@ function getTweets(node_action){
 }
 
 //spotify function
-function getSpotify(trackName, trackInfo){
+function getSpotify(){
 
     var trackName = process.argv[3];
 
@@ -85,14 +110,14 @@ function getSpotify(trackName, trackInfo){
             var trackInfo = data.tracks.items;
             for (var i = 0; i < 1; i++) {
                 var results = 
-                    "=======================================" + "\n" +
+                    "<=================================>" + "\n" +
                     "Artist: " + trackInfo[i].artists[0].name + "\n" +
                     "Album: " + trackInfo[i].album.name + "\n"
                     +
                     "Song: " + trackInfo[i].name + "\n"
                     +
                     "Preview URL: " + trackInfo[i].preview_url + "\n"
-                    + "====================================="
+                    + "<=================================>"
                 console.log(results); 
             };
         }
@@ -102,15 +127,28 @@ function getSpotify(trackName, trackInfo){
 
 //omdb function
 function getOMDB() {
-    search = search.split(' ').join('+');
+    //search = search.split(' ').join('+');
     var movie = process.argv[3];
+    if (!movie) {
+        movie = "spiderman"
+    }
 
-    request("http://www.omdbapi.com/?i=tt3896198&apikey=9882e428" + "/?t=" + movie + "", function(error, response, body) {
+    var queryURL = 'http://www.omdbapi.com/apikey=9882e428&/?t=' + movie + "&y=&plot=short&tomatoes=true&r=json";
+
+    request(queryURL, function(error, response, body) {
         if (!error && response.statusCode === 200) {
-            console.log("The movie's stats are: " + JSON.parse(body).title);
-        }
-    });
-}
+            var jsonData = JSON.parse(body);
+            for(var i = 0; i < 1; i++) {
+                var output = "Movie Title: " + jsonData.title + "\n" +       "Year: " + jsonData.year + "\n" +
+                         "IMDB rating: " + jsonData.imbdRating + "\n" + "Rotten Tomatoes: " + jsonData.tomatoRating + "\n" + "Country: " + jsonData.country + "\n" +
+                         "Language: " + jsonData.language + "\n" + "Plot: " + jsonData.plot + "\n" +
+                         "Actors: " + jsonData.actors + "\n"
+                         console.log(output);
+                        };
+                    }
+                });
+            }
+
 
 
 
