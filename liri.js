@@ -14,34 +14,6 @@ var request = require("request");
 //just so i don't have to type in process.argv over and over
 var node_action = process.argv[2];
 
-//type in something and you'll get a response
-//doTwitter();
-//doSpotify(); //new
-
-//im aware that this can be consolidated with a "switch"; i did this originally in order to test out each feature one by one
-
-//twitter worked up into spotify was added, and i think it has to do with the variable set for process.argv that seems to override my-tweets and assume it's for spotify
-
-//does nothing and it's probably because i'm not using some sort of split method to add the movie input as "this+is+a+movie"
-/*function doSomething() {
-    if(node_action = "movie-this") {
-        getOMDB();
-    }
-};
-
-//twitter function to call
-function doTwitter(node_action) { //new
-    if(node_action = "my-tweets") {
-        getTweets();
-    }
-}; 
-
-//spotify function to call
-function doSpotify() { //new
-    if (node_action = "spotify-this-song") {
-        getSpotify();
-    }
-};*/
 
 function doSomething() {
     switch (node_action) {
@@ -133,20 +105,22 @@ function getOMDB() {
         movie = "spiderman"
     }
 
-    var queryURL = 'http://www.omdbapi.com/apikey=9882e428&/?t=' + movie + "&y=&plot=short&tomatoes=true&r=json";
+    var queryURL = "http://www.omdbapi.com/?apikey=trilogy&t=" + movie;
 
     request(queryURL, function(error, response, body) {
+        
         if (!error && response.statusCode === 200) {
-            var jsonData = JSON.parse(body);
             for(var i = 0; i < 1; i++) {
-                var output = "Movie Title: " + jsonData.title + "\n" +       "Year: " + jsonData.year + "\n" +
-                         "IMDB rating: " + jsonData.imbdRating + "\n" + "Rotten Tomatoes: " + jsonData.tomatoRating + "\n" + "Country: " + jsonData.country + "\n" +
-                         "Language: " + jsonData.language + "\n" + "Plot: " + jsonData.plot + "\n" +
-                         "Actors: " + jsonData.actors + "\n"
+                var jsonData = JSON.parse(body);
+                var output = "Movie Title: " + jsonData.Title + "\n" +       "Year: " + jsonData.Year + "\n" +
+                         "IMDB rating: " + jsonData.imdbRating + "\n" + "Rotten Tomatoes: " + jsonData.Ratings[0].Value + "\n" + "Country: " + jsonData.Country + "\n" +
+                         "Language: " + jsonData.Language + "\n" + "Plot: " + jsonData.Plot + "\n" +
+                         "Actors: " + jsonData.Actors + "\n"
                          console.log(output);
                         };
                     }
                 });
+            //console.log(jsonData);
             }
 
 
